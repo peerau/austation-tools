@@ -6,7 +6,7 @@
 //	you also need the runtime condenser in the folder rc, with the binary named rc
 //	it creates .gz files, you can abuse http-gzip-static and a few rewrite rules in nginx to make nginx serve them up as http-gzip compressed text files.
 
-$servers = array('sybil', 'basil');
+$servers = array('austation');
 
 if (php_sapi_name() != "cli")
 	exit;
@@ -203,7 +203,7 @@ function fillzips($file, $basename, $monthzip, $dayzip, $roundzip, $day, $round)
 }
 
 echo "Starting up\n";
-$servers = array('sybil', 'basil');
+$servers = array('austation');
 foreach ($servers as $server) {
 	echo "Loading $server\n";
 	updateconfig($server);
@@ -461,22 +461,22 @@ function parseline ($line, $html) {
 	$words = explode(' ', $line);
 	$htmlwords = explode(' ', $html);
 	
-	$logtype = (explode(']',$words[0])[1]);
+	$logtype = ($words[2]);
 	switch ($logtype) {
 		case 'ACCESS:':
-			if ($words[1] == 'Login:') {
+			if ($words[3] == 'Login:') {
 				$words[count($words)-4] = '-censored(ip/cid)-';
 				$htmlwords[count($words)-4] = '<span class="censored">-censored(ip/cid)-</span>';
 			}
-			if ($words[1] == 'Failed')
+			if ($words[3] == 'Failed')
 				return '-censored(invalid connection data)-';
 			break;
 		case 'ADMIN:':
-			if ($words[1] == 'HELP:')
+			if ($words[3] == 'HELP:')
 				return censor('asay/apm/ahelp/notes/etc');
-			if ($words[1] == 'PM:')
+			if ($words[3] == 'PM:')
 				return censor('asay/apm/ahelp/notes/etc');
-			if ($words[1] == 'ASAY:')
+			if ($words[3] == 'ASAY:')
 				return censor('asay/apm/ahelp/notes/etc');
 			if (preg_match('/ADMIN: .*\\/\\(.*\\) : /', $line))
 				return censor('asay/apm/ahelp/notes/etc');
@@ -494,7 +494,7 @@ function parseline ($line, $html) {
 				return censor('asay/apm/ahelp/notes/etc');
 			if (preg_match('/ADMIN: .*\\/\\(.*\\) has deleted a /', $line))
 				return censor('asay/apm/ahelp/notes/etc');*/ //old messages about message/note/memo adding.
-			if ($words[1] == '<a')
+			if ($words[3] == '<a')
 				return censor('asay/apm/ahelp/notes/etc');
 			break;
 		case 'ADMINPRIVATE:':
@@ -521,7 +521,7 @@ function parseline ($line, $html) {
 			break;
 	}		
 	
-	return array(implode(' ',$words), '<p class="'.rtrim(explode(']',$words[0])[1],':').'">'.implode(' ',$htmlwords).'</p>');
+	return array(implode(' ',$words), '<p class="'.rtrim($words[2],':').'">'.implode(' ',$htmlwords).'</p>');
 }
 
 function censor($reason) {
