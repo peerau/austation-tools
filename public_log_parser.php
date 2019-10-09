@@ -1,10 +1,11 @@
 <?php
-//This has very little documentation, and is a hobbled togeather mess where speed to code and preformance of the code were placed before code readability or maintainability. Only works on linux. Requires gzip and gunzip shell commands as well as the php extentions.
+//This has very little documentation, and is a hobbled togeather mess where speed to code and preformance of the code were placed before code readability
+// or maintainability. Only works on linux. Requires gzip and gunzip shell commands as well as the php extentions.
 
-//	edit the server array below to your server(s) 
-//	symlink server-gamedata/servername to the static folder of tgs3 (gamedata folder for tgs2), and symlink parsed-logs to a folder accessable by the webserver
-//	you also need the runtime condenser in the folder rc, with the binary named rc
-//	it creates .gz files, you can abuse http-gzip-static and a few rewrite rules in nginx to make nginx serve them up as http-gzip compressed text files.
+// edit the server array below to your server(s) there's one on line 207 too
+// symlink server-gamedata/servername to the static folder of tgs3 (gamedata folder for tgs2), and symlink parsed-logs to a folder accessable by the webserver
+// you also need the runtime condenser in the folder rc, with the binary named rc (see the tools folder in your game server repo)
+// it creates .gz files, you can abuse http-gzip-static and a few rewrite rules in nginx to make nginx serve them up as http-gzip compressed text files.
 
 $servers = array('austation');
 
@@ -21,7 +22,7 @@ function getfoldersinfolder($folder) {
 		if ($result === '.' or $result === '..')
 			continue;
 
-		$folders[] = $folder . '/' . $result;	
+		$folders[] = $folder . '/' . $result;
 	}
 	return $folders;
 }
@@ -498,7 +499,7 @@ function parseline ($line, $html) {
 				return censor('asay/apm/ahelp/notes/etc');
 			break;
 		case 'ADMINPRIVATE:':
-			return censor('private logtype');
+			return censor('asay/apm/ahelp/notes/etc');
 			break;
 		case 'ASAY:':
 			return censor('asay/apm/ahelp/notes/etc');
@@ -519,7 +520,7 @@ function parseline ($line, $html) {
 			break;
 		default:
 			break;
-	}		
+	}
 	
 	return array(implode(' ',$words), '<p class="'.rtrim($words[2],':').'">'.implode(' ',$htmlwords).'</p>');
 }
